@@ -30,8 +30,8 @@ class Message(models.Model):
 
 
 class Mailing(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    finished_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    finished_at = models.DateTimeField()
     STATUS_CHOICES = [
         ("created", "Created"),
         ("published", "Published"),

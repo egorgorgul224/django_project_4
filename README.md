@@ -54,23 +54,14 @@ pip install -r requirements.txt
 
 ```
 .
-├──  - приложение на django
+├── config
+│     ├── asgi.py, settings.py, urls.py, wsgi.py необходимые модули для работы приложения
+├── mailings - приложение на django
 │ ├── migrations - папка с миграциями
 │ ├── templates - папка с шаблонами страниц
 │     ├── 
 │         ├── .html, .html, .html, .html - шаблоны файлов
 │     ├── admin.py, apps.py, models.py, tests.py, urls.py, views.py - необходимые модули для работы приложения
-├──  - приложение на django
-│ ├── management
-│     ├── commands
-│         ├──  - команда для автоматического добавления категорий и товаров в БД
-│ ├── migrations - папка с миграциями
-│ ├── templates - папка с шаблонами страниц
-│     ├── catalog
-│         ├── .html, .html, .html, .html - шаблоны файлов
-│     ├── admin.py, apps.py, forms.py, models.py, tests.py, urls.py, views.py - необходимые модули для работы приложения
-├── config
-│     ├── asgi.py, settings.py, urls.py, wsgi.py необходимые модули для работы приложения
 ├── media
 │ ├── photos - фото товаров, используются в бд при создании товара
 ├── static - папка со стилями и фото
@@ -90,7 +81,6 @@ pip install -r requirements.txt
 ├── .env.example - env экземпляр для доступа к закрытым данным
 ├── .flake8
 ├── .gitignore
-├── _fixture.json - фикстура для заполнения БД
 ├── _fixture.json - фикстура для заполнения БД
 ├── manage.py
 ├── pyproject.toml
