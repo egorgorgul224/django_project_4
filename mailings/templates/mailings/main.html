@@ -11,7 +11,7 @@
             <div class="card-body">
                 <h5 class="card-title text-center">Рассылки</h5>
                 <p class="card-text">Количество всех рассылок: </p>
-                <a href="#" class="btn btn-primary">Посмотреть рассылки</a>
+                <a href="{% url 'mailings:mailing_list' %}" class="btn btn-primary">Посмотреть рассылки</a>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
             <div class="card-body">
                 <h5 class="card-title text-center">Получатели рассылок</h5>
                 <p class="card-text">Количество уникальных получателей: </p>
-                <a href="#" class="btn btn-primary">Посмотреть получателей</a>
+                <a href="{% url 'mailings:recipient_list' %}" class="btn btn-primary">Посмотреть получателей</a>
             </div>
         </div>
     </div>

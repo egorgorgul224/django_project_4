@@ -1,0 +1,54 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Рассылки{% endblock %}
+
+{% block content %}
+
+<h1 class="display-5 text-center mb-4">Рассылки</h1>
+<a class="p-2 btn btn-outline-primary" href="{% url 'mailings:mailing_create' %}">Создать рассылку</a>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">№</th>
+        <th scope="col">Дата отправки</th>
+        <th scope="col">Дата окончания отправки</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Сообщение</th>
+        <th scope="col">Действия</th>
+    </tr>
+    </thead>
+    {% for mailing in object_list %}
+    <tbody>
+    <tr>
+        <td>{{ mailing.id }}</td>
+        {% if mailing.created_at %}
+        <td>{{ mailing.created_at }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        {% if mailing.finished_at %}
+        <td>{{ mailing.finished_at }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        <td>
+            {% if mailing.status == 'created' %}
+            Создана
+            {% elif mailing.status == 'published' %}
+            Запущена
+            {% elif mailing.status == 'completed' %}
+            Завершена
+            {% endif %}
+        </td>
+        <td>{{ mailing.message|truncatechars:20 }}</td>
+        <td>
+            <a href="#">Отправить</a> |
+            <a href="{% url 'mailings:mailing_detail' mailing.id %}">Подробнее</a> |
+            <a href="{% url 'mailings:mailing_update' mailing.id %}">Редактировать</a> |
+            <a href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a></td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+{% endblock %}

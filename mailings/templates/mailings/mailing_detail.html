@@ -1,0 +1,36 @@
+{% extends 'mailings/base.html' %}
+{% load static %}
+
+{% block title %}Информация о рассылке{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Информация о рассылке</h1>
+<p>Дата первой отправки:
+    {% if mailing.created_at %}
+    {{ object.created_at}}
+    {% else %}
+    {% endif %}
+</p>
+<p>Дата окончания отправки:
+    {% if mailing.created_at %}
+    {{ object.finished_at}}
+    {% else %}
+    {% endif %}
+</p>
+<p>
+    Статус: {% if mailing.status == 'created' %}
+    Создана
+    {% elif mailing.status == 'published' %}
+    Запущена
+    {% elif mailing.status == 'completed' %}
+    Завершена
+    {% endif %}
+</p>
+<p>Сообщение: {{ object.message }}</p>
+<p>Получатели: {{ object.recipient }}</p>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:mailing_list' %}">К полному списку</a>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:mailing_update' mailing.id %}">Редактировать</a>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Message, Recipient
+from .models import Mailing, Message, Recipient
 
 
 class RecipientForm(forms.ModelForm):
@@ -17,3 +17,16 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         exclude = ("owner",)
+
+
+class MailingForm(forms.ModelForm):
+    """Форма по модели Mailing."""
+
+    class Meta:
+        model = Mailing
+        exclude = (
+            "created_at",
+            "finished_at",
+            "status",
+            "owner",
+        )

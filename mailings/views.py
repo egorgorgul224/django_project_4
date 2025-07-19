@@ -1,8 +1,8 @@
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 
-from mailings.forms import MessageForm, RecipientForm
-from mailings.models import Message, Recipient
+from mailings.forms import MailingForm, MessageForm, RecipientForm
+from mailings.models import Mailing, Message, Recipient
 
 
 # Create your views here.
@@ -80,7 +80,7 @@ class MessageDeleteView(DeleteView):
 
 
 class MessageUpdateView(UpdateView):
-    """Контроллер для обновления информации сообщения."""
+    """Контроллер для обновления данных сообщения."""
 
     model = Message
     form_class = MessageForm
@@ -88,3 +88,42 @@ class MessageUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse("mailings:message_detail", args=[self.kwargs.get("pk")])
+
+
+class MailingListView(ListView):
+    """Контроллер для отображения страницы с рассылками."""
+
+    model = Mailing
+    template_name = "mailing_list.html"
+
+
+class MailingCreateView(CreateView):
+    """Контроллер для создания рассылки."""
+
+    model = Mailing
+    form_class = MailingForm
+    success_url = reverse_lazy("mailings:mailing_list")
+
+
+class MailingDetailView(DetailView):
+    """Контроллер для просмотра информации по рассылке."""
+
+    model = Mailing
+
+
+class MailingDeleteView(DeleteView):
+    """Контроллер для удаления рассылки."""
+
+    model = Mailing
+    success_url = reverse_lazy("mailings:mailing_list")
+
+
+class MailingUpdateView(UpdateView):
+    """Контроллер для обновления данных рассылки."""
+
+    model = Mailing
+    form_class = MailingForm
+    success_url = reverse_lazy("mailings:mailing_list")
+
+    def get_success_url(self):
+        return reverse("mailings:mailing_detail", args=[self.kwargs.get("pk")])

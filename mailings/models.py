@@ -39,14 +39,19 @@ class Mailing(models.Model):
     """Модель рассылка. Содержит поля created_at(дата отправки), finished_at(дата окончания отправки), status, message,
     recipient, owner."""
 
-    created_at = models.DateTimeField()
-    finished_at = models.DateTimeField()
+    Created = "created"
+    Published = "published"
+    Completed = "completed"
+
     STATUS_CHOICES = [
-        ("created", "Created"),
-        ("published", "Published"),
-        ("completed", "Completed"),
+        (Created, "Создана"),
+        (Published, "Запущена"),
+        (Completed, "Завершена"),
     ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="created", verbose_name="Статус рассылки")
+
+    created_at = models.DateTimeField(null=True, blank=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=Created, verbose_name="Статус рассылки")
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name="messages", verbose_name="Сообщение")
     recipient = models.ManyToManyField(Recipient, related_name="recipients", verbose_name="Получатели")
 
