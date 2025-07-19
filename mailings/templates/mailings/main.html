@@ -1,0 +1,37 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+
+<h1 class="display-5 text-center mb-4">Отчет по рассылкам</h1>
+<div class="row">
+    <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Рассылки</h5>
+                <p class="card-text">Количество всех рассылок: </p>
+                <a href="#" class="btn btn-primary">Посмотреть рассылки</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Получатели рассылок</h5>
+                <p class="card-text">Количество уникальных получателей: </p>
+                <a href="#" class="btn btn-primary">Посмотреть получателей</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Блок</h5>
+                <p class="card-text">Кол-во: </p>
+                <a href="#" class="btn btn-primary">Посмотреть страницу</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
