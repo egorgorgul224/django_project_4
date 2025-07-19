@@ -1,0 +1,32 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Сообщения для рассылок{% endblock %}
+
+{% block content %}
+
+<h1 class="display-5 text-center mb-4">Сообщения для рассылок</h1>
+<a class="p-2 btn btn-outline-primary" href="{% url 'mailings:message_create' %}">Создать сообщение</a>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">№</th>
+        <th scope="col">Тема сообщения</th>
+        <th scope="col">Содержимое сообщения</th>
+        <th scope="col">Действия</th>
+    </tr>
+    </thead>
+    {% for message in object_list %}
+    <tbody>
+    <tr>
+        <td>{{ message.id }}</td>
+        <td>{{ message.subject|truncatechars:30 }}</td>
+        <td>{{ message.body|truncatechars:50 }}</td>
+        <td><a href="{% url 'mailings:message_detail' message.id %}">Подробнее</a> |
+            <a href="{% url 'mailings:message_update' message.id %}">Редактировать</a> |
+            <a href="{% url 'mailings:message_delete' message.id %}">Удалить</a></td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,7 +1,6 @@
 from django import forms
-from django.core.exceptions import ValidationError
 
-from .models import Recipient
+from .models import Message, Recipient
 
 
 class RecipientForm(forms.ModelForm):
@@ -9,4 +8,12 @@ class RecipientForm(forms.ModelForm):
 
     class Meta:
         model = Recipient
+        exclude = ("owner",)
+
+
+class MessageForm(forms.ModelForm):
+    """Форма по модели Message."""
+
+    class Meta:
+        model = Message
         exclude = ("owner",)

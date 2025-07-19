@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Тест{% endblock %}</title>
+    <title>{% block title %}MyMailings{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 </head>
@@ -16,7 +16,7 @@
                     <li class="nav-item">
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:main' %}">Главная</a>
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:recipient_list' %}">Получатели рассылок</a>
-                        <a class="p-2 btn btn-outline-primary" href="#">Сообщения</a>
+                        <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:message_list' %}">Сообщения</a>
                         <a class="p-2 btn btn-outline-primary" href="#">Рассылки</a>
                         <a class="p-2 btn btn-outline-primary" href="#">Результаты рассылок</a>
                     </li>

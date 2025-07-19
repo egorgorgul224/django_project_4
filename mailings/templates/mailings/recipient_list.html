@@ -20,9 +20,9 @@
     <tbody>
     <tr>
         <td>{{ recipient.id }}</td>
-        <td>{{ recipient.email }}</td>
-        <td>{{ recipient.full_name }}</td>
-        <td>{{ recipient.comment}}</td>
+        <td>{{ recipient.email|truncatechars:30 }}</td>
+        <td>{{ recipient.full_name|truncatechars:30 }}</td>
+        <td>{{ recipient.comment|truncatechars:50}}</td>
         <td><a href="{% url 'mailings:recipient_detail' recipient.id %}">Подробнее</a> |
             <a href="{% url 'mailings:recipient_update' recipient.id %}">Редактировать</a> |
             <a href="{% url 'mailings:recipient_delete' recipient.id %}">Удалить</a></td>
