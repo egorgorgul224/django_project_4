@@ -1,8 +1,12 @@
 from django.db import models
 
+from users.models import User
+
 
 # Create your models here.
 class Recipient(models.Model):
+    """Модель получателя рассылок. Содержит поля email, full_name, comment, owner."""
+
     email = models.EmailField(unique=True, verbose_name="Email")
     full_name = models.CharField(max_length=100, null=True, blank=True, verbose_name="ФИО")
     comment = models.TextField(null=True, blank=True)
@@ -17,6 +21,8 @@ class Recipient(models.Model):
 
 
 class Message(models.Model):
+    """Модель сообщение для рассылок. Содержит поля subject(тема письма), body(тело письма), owner."""
+
     subject = models.CharField(max_length=100, null=True, blank=True, verbose_name="Тема письма")
     body = models.TextField(null=True, blank=True, verbose_name="Тело письма")
 
@@ -30,6 +36,9 @@ class Message(models.Model):
 
 
 class Mailing(models.Model):
+    """Модель рассылка. Содержит поля created_at(дата отправки), finished_at(дата окончания отправки), status, message,
+    recipient, owner."""
+
     created_at = models.DateTimeField()
     finished_at = models.DateTimeField()
     STATUS_CHOICES = [
@@ -51,6 +60,8 @@ class Mailing(models.Model):
 
 
 class Attempt(models.Model):
+    """Модель попытка рассылки. Содержит поля created_at, status, server_response(ответ сервера), recipient."""
+
     created_at = models.DateTimeField(auto_now_add=True)
     STATUS_CHOICES = [
         ("successfully", "Successfully"),

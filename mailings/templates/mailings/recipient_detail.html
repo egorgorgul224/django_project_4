@@ -1,0 +1,16 @@
+{% extends 'mailings/base.html' %}
+{% load static %}
+
+{% block title %}Информация о получателе{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Информация о получателе</h1>
+<p>Почта: {{ object.email}}</p>
+<p>ФИО: {{ object.full_name }}</p>
+<p>Комментарий: {{ object.comment }}</p>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:recipient_list' %}">К полному списку</a>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:recipient_update' recipient.id %}">Редактировать</a>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:recipient_delete' recipient.id %}">Удалить</a>
+
+{% endblock %}
