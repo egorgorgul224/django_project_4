@@ -74,10 +74,15 @@ class Attempt(models.Model):
     ]
     status = models.CharField(max_length=14, choices=STATUS_CHOICES, default="unsuccessfully")
     server_response = models.TextField()
-    recipient = models.ForeignKey(Mailing, on_delete=models.CASCADE, related_name="mailings", verbose_name="Рассылка")
+    mailing = models.ForeignKey(
+        Mailing, on_delete=models.CASCADE, related_name="attempt_mailings", verbose_name="Рассылка"
+    )
+    recipient = models.ForeignKey(
+        Recipient, on_delete=models.CASCADE, related_name="attempt_recipients", verbose_name="Получатель рассылки"
+    )
 
     def __str__(self):
-        return f"{self.recipient}, {self.created_at}, {self.status}"
+        return f"{self.mailing}, {self.created_at}, {self.status}"
 
     class Meta:
         verbose_name = "Попытка рассылки"

@@ -31,7 +31,7 @@
         {% else %}
         <td></td>
         {% endif %}
-        <td>
+        <td class="{% if mailing.status == 'created' %}text-bg-primary{% elif mailing.status == 'published' %}text-bg-success{% elif mailing.status == 'completed' %}text-bg-secondary{% endif %}">
             {% if mailing.status == 'created' %}
             Создана
             {% elif mailing.status == 'published' %}
