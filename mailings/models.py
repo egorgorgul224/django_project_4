@@ -17,7 +17,7 @@ class Recipient(models.Model):
     class Meta:
         verbose_name = "Получатель рассылки"
         verbose_name_plural = "Получатели рассылки"
-        ordering = ["email"]
+        ordering = ["-id"]
 
 
 class Message(models.Model):
@@ -32,7 +32,7 @@ class Message(models.Model):
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
-        ordering = ["subject"]
+        ordering = ["-id"]
 
 
 class Mailing(models.Model):
@@ -61,7 +61,7 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
-        ordering = ["finished_at"]
+        ordering = ["-id"]
 
 
 class Attempt(models.Model):
@@ -87,4 +87,4 @@ class Attempt(models.Model):
     class Meta:
         verbose_name = "Попытка рассылки"
         verbose_name_plural = "Попытки рассылки"
-        ordering = ["created_at"]
+        ordering = ["-created_at"]

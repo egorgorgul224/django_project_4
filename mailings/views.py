@@ -1,12 +1,13 @@
 import os
-from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
-from django.shortcuts import get_object_or_404, redirect
-from django.utils import timezone
+
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
 
 from mailings.forms import MailingForm, MessageForm, RecipientForm
-from mailings.models import Mailing, Message, Recipient, Attempt
+from mailings.models import Attempt, Mailing, Message, Recipient
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 
@@ -117,6 +118,7 @@ class MailingDetailView(DetailView):
     model = Mailing
 
     def get_context_data(self, **kwargs):
+        """Функция для получения всех получателей рассылки."""
         context = super().get_context_data(**kwargs)
         mailing_emails = get_object_or_404(Mailing, pk=self.kwargs["pk"])
         recipients = mailing_emails.recipient.values_list("email", flat=True)
@@ -142,7 +144,17 @@ class MailingUpdateView(UpdateView):
         return reverse("mailings:mailing_detail", args=[self.kwargs.get("pk")])
 
 
+class AttemptListView(ListView):
+    """Контроллер для отображения страницы с попытками рассылки."""
+
+    model = Attempt
+    template_name = "attempt_list.html"
+
+
 class StartMailingView(View):
+    """Функция для рассылки сообщений всем получателям данной рассылки. После отправки сообщения создается объект
+    модели Attempt с результатами рассылки."""
+
     def post(self, *args, **kwargs):
         mailing = get_object_or_404(Mailing, pk=self.kwargs["pk"])
         recipients = mailing.recipient.all()
@@ -172,6 +184,17 @@ class StartMailingView(View):
                     recipient_id=recipient.pk,
                 )
         mailing.finished_at = timezone.now()
+        mailing.save()
+
+        return redirect("mailings:mailing_list")
+
+
+class AddArchiveView(View):
+    """Функция для добавления рассылки в архив. Статус меняется на 'Завершено'."""
+
+    def post(self, *args, **kwargs):
+        mailing = get_object_or_404(Mailing, pk=self.kwargs["pk"])
+        mailing.status = "completed"
         mailing.save()
 
         return redirect("mailings:mailing_list")

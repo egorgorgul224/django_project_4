@@ -1,0 +1,43 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Результаты рассылки{% endblock %}
+
+{% block content %}
+
+<h1 class="display-5 text-center mb-4">Результаты рассылки</h1>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">№</th>
+        <th scope="col">Дата отправки</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Сообщение сервера</th>
+        <th scope="col">Сообщение</th>
+        <th scope="col">Почта</th>
+    </tr>
+    </thead>
+    {% for attempt in object_list %}
+    <tbody>
+    <tr>
+        <td>{{ attempt.id }}</td>
+        {% if attempt.created_at %}
+        <td>{{ attempt.created_at }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        <td class="{% if attempt.status == 'successfully' %}text-bg-success{% elif attempt.status == 'unsuccessfully' %}text-bg-warning{% endif %}">
+            {% if attempt.status == 'successfully' %}
+            Успешно
+            {% elif attempt.status == 'unsuccessfully' %}
+            Не успешно
+            {% endif %}
+        </td>
+        <td>{{ attempt.server_response }}</td>
+        <td>{{ attempt.mailing.message }}</td>
+        <td>{{ attempt.recipient }}</td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+{% endblock %}

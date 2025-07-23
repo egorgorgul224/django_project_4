@@ -44,10 +44,25 @@
         <td>
             <form method="post" action="{% url 'mailings:mailing_start' mailing.id %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-link">Отправить</button>|
-                <a href="{% url 'mailings:mailing_detail' mailing.id %}">Подробнее</a> |
-                <a href="{% url 'mailings:mailing_update' mailing.id %}">Редактировать</a> |
-                <a href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>
+                {% if mailing.status == 'created' or mailing.status == 'published' %}
+                <button type="submit" class="btn btn-link">Отправить</button>
+                /
+                {% elif mailing.status == 'completed' %}
+                <button type="submit" class="btn btn-link" disabled>Отправить</button>
+                /
+                {% endif %}
+
+                <form method="post" action="{% url 'mailings:add_archive' mailing.id %}">
+                    {% csrf_token %}
+                    {% if mailing.status == 'created' or mailing.status == 'published' %}
+                    <button type="submit" class="btn btn-link">В архив</button>
+                    /
+                    {% elif mailing.status == 'completed' %}
+                    <button type="submit" class="btn btn-link" disabled>В архив</button>
+                    /
+                    {% endif %}
+                    <a href="{% url 'mailings:mailing_detail' mailing.id %}">Подробнее</a>
+                </form>
             </form>
         </td>
     </tr>
