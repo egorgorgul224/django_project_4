@@ -6,14 +6,14 @@
 {% block content %}
 
 <h1 class="mb-4">Информация о рассылке</h1>
-<p>Дата первой отправки:
+<p>Дата отправки:
     {% if mailing.created_at %}
     {{ object.created_at}}
     {% else %}
     {% endif %}
 </p>
-<p>Дата окончания отправки:
-    {% if mailing.created_at %}
+<p>Дата завершения отправки:
+    {% if mailing.finished_at %}
     {{ object.finished_at}}
     {% else %}
     {% endif %}
@@ -28,7 +28,7 @@
     {% endif %}
 </p>
 <p>Сообщение: {{ object.message }}</p>
-<p>Получатели: {{ object.recipient }}</p>
+<p>Получатели рассылки: {% for recipient in recipient_email %} {{ recipient }} {% endfor %}</p>
 <a class="p-2 btn btn-outline-dark" href="{% url 'mailings:mailing_list' %}">К полному списку</a>
 <a class="p-2 btn btn-outline-dark" href="{% url 'mailings:mailing_update' mailing.id %}">Редактировать</a>
 <a class="p-2 btn btn-outline-dark" href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>

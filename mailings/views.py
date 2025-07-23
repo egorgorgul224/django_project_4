@@ -1,8 +1,14 @@
+import os
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
+from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
+from django.core.mail import send_mail
 
 from mailings.forms import MailingForm, MessageForm, RecipientForm
-from mailings.models import Mailing, Message, Recipient
+from mailings.models import Mailing, Message, Recipient, Attempt
+
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 
 
 # Create your views here.
@@ -110,6 +116,13 @@ class MailingDetailView(DetailView):
 
     model = Mailing
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        mailing_emails = get_object_or_404(Mailing, pk=self.kwargs["pk"])
+        recipients = mailing_emails.recipient.values_list("email", flat=True)
+        context["recipient_email"] = recipients
+        return context
+
 
 class MailingDeleteView(DeleteView):
     """Контроллер для удаления рассылки."""
@@ -127,3 +140,38 @@ class MailingUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse("mailings:mailing_detail", args=[self.kwargs.get("pk")])
+
+
+class StartMailingView(View):
+    def post(self, *args, **kwargs):
+        mailing = get_object_or_404(Mailing, pk=self.kwargs["pk"])
+        recipients = mailing.recipient.all()
+        mailing.created_at = timezone.now()
+        mailing.status = "published"
+        mailing.save()
+        for recipient in recipients:
+            try:
+                send_mail(
+                    subject=mailing.message.subject,
+                    message=mailing.message.body,
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=[recipient],
+                )
+            except Exception as e:
+                Attempt.objects.create(
+                    status="unsuccessfully",
+                    server_response=f"Ошибка отправки сообщения: {str(e)}",
+                    mailing_id=self.kwargs["pk"],
+                    recipient_id=recipient.pk,
+                )
+            else:
+                Attempt.objects.create(
+                    status="successfully",
+                    server_response="Успешно отправлено сообщение",
+                    mailing_id=self.kwargs["pk"],
+                    recipient_id=recipient.pk,
+                )
+        mailing.finished_at = timezone.now()
+        mailing.save()
+
+        return redirect("mailings:mailing_list")

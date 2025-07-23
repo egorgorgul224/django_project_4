@@ -73,7 +73,7 @@ class Attempt(models.Model):
         ("unsuccessfully", "Unsuccessfully"),
     ]
     status = models.CharField(max_length=14, choices=STATUS_CHOICES, default="unsuccessfully")
-    server_response = models.TextField()
+    server_response = models.TextField(null=True, blank=True)
     mailing = models.ForeignKey(
         Mailing, on_delete=models.CASCADE, related_name="attempt_mailings", verbose_name="Рассылка"
     )

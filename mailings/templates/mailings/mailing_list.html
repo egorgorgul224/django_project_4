@@ -11,7 +11,7 @@
     <tr>
         <th scope="col">№</th>
         <th scope="col">Дата отправки</th>
-        <th scope="col">Дата окончания отправки</th>
+        <th scope="col">Дата завершения отправки</th>
         <th scope="col">Статус</th>
         <th scope="col">Сообщение</th>
         <th scope="col">Действия</th>
@@ -42,10 +42,14 @@
         </td>
         <td>{{ mailing.message|truncatechars:20 }}</td>
         <td>
-            <a href="#">Отправить</a> |
-            <a href="{% url 'mailings:mailing_detail' mailing.id %}">Подробнее</a> |
-            <a href="{% url 'mailings:mailing_update' mailing.id %}">Редактировать</a> |
-            <a href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a></td>
+            <form method="post" action="{% url 'mailings:mailing_start' mailing.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link">Отправить</button>|
+                <a href="{% url 'mailings:mailing_detail' mailing.id %}">Подробнее</a> |
+                <a href="{% url 'mailings:mailing_update' mailing.id %}">Редактировать</a> |
+                <a href="{% url 'mailings:mailing_delete' mailing.id %}">Удалить</a>
+            </form>
+        </td>
     </tr>
     </tbody>
     {% endfor %}
