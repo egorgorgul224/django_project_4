@@ -10,7 +10,8 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title text-center">Рассылки</h5>
-                <p class="card-text">Количество всех рассылок: </p>
+                <p class="card-text">Создано рассылок: {{ mailing_info }} </p>
+                <p class="card-text">Активные рассылки: {{ mailing_active }} </p>
                 <a href="{% url 'mailings:mailing_list' %}" class="btn btn-primary">Посмотреть рассылки</a>
             </div>
         </div>
@@ -19,7 +20,8 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title text-center">Получатели рассылок</h5>
-                <p class="card-text">Количество уникальных получателей: </p>
+                <p class="card-text">Количество уникальных получателей: {{ recipient_unique }}</p>
+                <p class="card-text">Добавлено в рассылки: {{ recipient_in_mailing }}</p>
                 <a href="{% url 'mailings:recipient_list' %}" class="btn btn-primary">Посмотреть получателей</a>
             </div>
         </div>
@@ -28,8 +30,19 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title text-center">Сообщения</h5>
-                <p class="card-text">Кол-во созданных сообщений: </p>
+                <p class="card-text">Создано сообщений: {{ message_info }} </p>
+                <p class="card-text">Всего отправлено сообщений: {{ message_success }} </p>
                 <a href="{% url 'mailings:message_list' %}" class="btn btn-primary">Посмотреть сообщения</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 mb-3 mt-4 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Результаты рассылок</h5>
+                <p class="card-text">Кол-во рассылок: {{ attempt_sent }} </p>
+                <p class="card-text">Успешных: {{ attempt_success }}. Неуспешных: {{ attempt_unsuccess }} </p>
+                <a href="{% url 'mailings:attempt_list' %}" class="btn btn-primary">Посмотреть рассылки</a>
             </div>
         </div>
     </div>

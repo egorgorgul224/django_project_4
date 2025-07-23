@@ -18,10 +18,38 @@ class MainTemplateView(TemplateView):
 
     template_name = "mailings/main.html"
 
+    def get_context_data(self, **kwargs):
+        """Функция для получения данных по рассылкам, получателям и сообщениям. Используются для отображения
+        статистики на главной странице."""
+        context = super().get_context_data(**kwargs)
+        mailing_info = len(Mailing.objects.all())
+        recipient_unique = len(Recipient.objects.all())
+        message_info = len(Message.objects.all())
+        mailing_active = len(Mailing.objects.filter(status=Mailing.Published))
+        recipient_in_mailing = Attempt.objects.values_list("recipient", flat=True).distinct()
+        message_success = len(Attempt.objects.filter(status=Attempt.Successfully).values_list("mailing", flat=True))
+        attempt_sent = len(Attempt.objects.all())
+        attempt_success = len(Attempt.objects.filter(status=Attempt.Successfully))
+        attempt_unsuccess = len(Attempt.objects.filter(status=Attempt.Unsuccessfully))
+        context = {
+            "mailing_info": mailing_info,
+            "recipient_unique": recipient_unique,
+            "message_info": message_info,
+            "mailing_active": mailing_active,
+            "recipient_in_mailing": recipient_in_mailing,
+            "attempt_sent": attempt_sent,
+            "attempt_success": attempt_success,
+            "attempt_unsuccess": attempt_unsuccess,
+            "message_success": message_success,
+        }
+
+        return context
+
 
 class RecipientListView(ListView):
     """Контроллер для отображения страницы с получателями."""
 
+    paginate_by = 15
     model = Recipient
     template_name = "recipient_list.html"
 
@@ -61,6 +89,7 @@ class RecipientUpdateView(UpdateView):
 class MessageListView(ListView):
     """Контроллер для отображения страницы с сообщениями."""
 
+    paginate_by = 15
     model = Message
     template_name = "message_list.html"
 
@@ -100,6 +129,7 @@ class MessageUpdateView(UpdateView):
 class MailingListView(ListView):
     """Контроллер для отображения страницы с рассылками."""
 
+    paginate_by = 15
     model = Mailing
     template_name = "mailing_list.html"
 
@@ -147,6 +177,7 @@ class MailingUpdateView(UpdateView):
 class AttemptListView(ListView):
     """Контроллер для отображения страницы с попытками рассылки."""
 
+    paginate_by = 15
     model = Attempt
     template_name = "attempt_list.html"
 

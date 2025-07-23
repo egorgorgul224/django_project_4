@@ -1,7 +1,5 @@
 from django.db import models
 
-from users.models import User
-
 
 # Create your models here.
 class Recipient(models.Model):
@@ -67,12 +65,15 @@ class Mailing(models.Model):
 class Attempt(models.Model):
     """Модель попытка рассылки. Содержит поля created_at, status, server_response(ответ сервера), recipient."""
 
+    Successfully = "successfully"
+    Unsuccessfully = "unsuccessfully"
+
     created_at = models.DateTimeField(auto_now_add=True)
     STATUS_CHOICES = [
-        ("successfully", "Successfully"),
-        ("unsuccessfully", "Unsuccessfully"),
+        (Successfully, "Успешно"),
+        (Unsuccessfully, "Не успешно"),
     ]
-    status = models.CharField(max_length=14, choices=STATUS_CHOICES, default="unsuccessfully")
+    status = models.CharField(max_length=14, choices=STATUS_CHOICES, default=Unsuccessfully)
     server_response = models.TextField(null=True, blank=True)
     mailing = models.ForeignKey(
         Mailing, on_delete=models.CASCADE, related_name="attempt_mailings", verbose_name="Рассылка"
