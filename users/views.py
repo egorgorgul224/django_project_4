@@ -13,11 +13,15 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 
 
 class RegisterView(CreateView):
+    """Класс для регистрации пользователя."""
+
     template_name = "users/register.html"
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("mailings:main")
 
     def form_valid(self, form):
+        """Функция валидации пользователя и отправки сообщения для подтверждения почты."""
+
         user = form.save()
         user.is_active = False
         token = secrets.token_hex(16)
@@ -35,6 +39,9 @@ class RegisterView(CreateView):
 
 
 def email_verification(request, token):
+    """Функция верификации пользователя после подтверждения почты. После подтверждения почты поле is.active становится
+    True."""
+
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.save()

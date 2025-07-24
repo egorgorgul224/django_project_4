@@ -4,6 +4,8 @@ from django.db import models
 
 # Create your models here.
 class User(AbstractUser):
+    """Модель пользователь. Содержит поля email, avatar, phone, country, token."""
+
     username = None
     email = models.EmailField(unique=True, verbose_name="Email")
 
