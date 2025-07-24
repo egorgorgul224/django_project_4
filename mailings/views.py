@@ -26,7 +26,7 @@ class MainTemplateView(TemplateView):
         recipient_unique = len(Recipient.objects.all())
         message_info = len(Message.objects.all())
         mailing_active = len(Mailing.objects.filter(status=Mailing.Published))
-        recipient_in_mailing = Attempt.objects.values_list("recipient", flat=True).distinct()
+        recipient_in_mailing = len(set(Attempt.objects.all().values_list("recipient", flat=True)))
         message_success = len(Attempt.objects.filter(status=Attempt.Successfully).values_list("mailing", flat=True))
         attempt_sent = len(Attempt.objects.all())
         attempt_success = len(Attempt.objects.filter(status=Attempt.Successfully))

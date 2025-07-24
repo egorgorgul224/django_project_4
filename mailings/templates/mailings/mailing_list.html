@@ -6,7 +6,7 @@
 
 <h1 class="display-5 text-center mb-4">Рассылки</h1>
 <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:mailing_create' %}">Создать рассылку</a>
-<table class="table">
+<table class="table" style="vertical-align: middle; text-align: left">
     <thead>
     <tr>
         <th scope="col">№</th>
@@ -51,7 +51,6 @@
                 <button type="submit" class="btn btn-link" disabled>Отправить</button>
                 /
                 {% endif %}
-
                 <form method="post" action="{% url 'mailings:add_archive' mailing.id %}">
                     {% csrf_token %}
                     {% if mailing.status == 'created' or mailing.status == 'published' %}
@@ -61,7 +60,8 @@
                     <button type="submit" class="btn btn-link" disabled>В архив</button>
                     /
                     {% endif %}
-                    <a href="{% url 'mailings:mailing_detail' mailing.id %}">Подробнее</a>
+                    <a href="{% url 'mailings:mailing_detail' mailing.id %}"
+                       style="vertical-align: middle">Подробнее</a>
                 </form>
             </form>
         </td>
