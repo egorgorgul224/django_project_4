@@ -92,7 +92,7 @@ class Attempt(models.Model):
     recipient = models.ForeignKey(
         Recipient, on_delete=models.CASCADE, related_name="attempt_recipients", verbose_name="Получатель рассылки"
     )
-    owner = models.CharField(max_length=100, null=True, blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1, related_name="attempts")
 
     def __str__(self):
         return f"{self.mailing}, {self.created_at}, {self.status}"

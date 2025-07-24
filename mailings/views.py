@@ -22,16 +22,26 @@ class MainTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         """Функция для получения данных по рассылкам, получателям и сообщениям. Используются для отображения
         статистики на главной странице."""
+
         context = super().get_context_data(**kwargs)
-        mailing_info = len(Mailing.objects.all())
-        recipient_unique = len(Recipient.objects.all())
-        message_info = len(Message.objects.all())
-        mailing_active = len(Mailing.objects.filter(status=Mailing.Published))
-        recipient_in_mailing = len(set(Attempt.objects.all().values_list("recipient", flat=True)))
-        message_success = len(Attempt.objects.filter(status=Attempt.Successfully).values_list("mailing", flat=True))
-        attempt_sent = len(Attempt.objects.all())
-        attempt_success = len(Attempt.objects.filter(status=Attempt.Successfully))
-        attempt_unsuccess = len(Attempt.objects.filter(status=Attempt.Unsuccessfully))
+        user_email = self.request.user
+        mailing_info = len(Mailing.objects.filter(owner=self.request.user.id))
+        recipient_unique = len(Recipient.objects.filter(owner=self.request.user.id))
+        message_info = len(Message.objects.filter(owner=self.request.user.id))
+        mailing_active = len(Mailing.objects.filter(status=Mailing.Published).filter(owner=self.request.user.id))
+        recipient_in_mailing = len(
+            set(Attempt.objects.filter(owner=self.request.user.id).values_list("recipient", flat=True))
+        )
+        message_success = len(
+            Attempt.objects.filter(status=Attempt.Successfully)
+            .filter(owner=self.request.user.id)
+            .values_list("mailing", flat=True)
+        )
+        attempt_sent = len(Attempt.objects.filter(owner=self.request.user.id))
+        attempt_success = len(Attempt.objects.filter(status=Attempt.Successfully).filter(owner=self.request.user.id))
+        attempt_unsuccess = len(
+            Attempt.objects.filter(status=Attempt.Unsuccessfully).filter(owner=self.request.user.id)
+        )
         context = {
             "mailing_info": mailing_info,
             "recipient_unique": recipient_unique,
@@ -42,6 +52,7 @@ class MainTemplateView(TemplateView):
             "attempt_success": attempt_success,
             "attempt_unsuccess": attempt_unsuccess,
             "message_success": message_success,
+            "user_email": user_email,
         }
 
         return context
@@ -53,6 +64,9 @@ class RecipientListView(LoginRequiredMixin, ListView):
     paginate_by = 15
     model = Recipient
     template_name = "recipient_list.html"
+
+    def get_queryset(self):
+        return Recipient.objects.filter(owner=self.request.user.id)
 
 
 class RecipientCreateView(CreateView):
@@ -100,6 +114,9 @@ class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     template_name = "message_list.html"
 
+    def get_queryset(self):
+        return Message.objects.filter(owner=self.request.user.id)
+
 
 class MessageCreateView(CreateView):
     """Контроллер для создания сообщения."""
@@ -145,6 +162,9 @@ class MailingListView(LoginRequiredMixin, ListView):
     paginate_by = 15
     model = Mailing
     template_name = "mailing_list.html"
+
+    def get_queryset(self):
+        return Mailing.objects.filter(owner=self.request.user.id)
 
 
 class MailingCreateView(CreateView):
@@ -199,6 +219,9 @@ class AttemptListView(LoginRequiredMixin, ListView):
     paginate_by = 15
     model = Attempt
     template_name = "attempt_list.html"
+
+    def get_queryset(self):
+        return Attempt.objects.filter(owner=self.request.user.id)
 
 
 class StartMailingView(View):
