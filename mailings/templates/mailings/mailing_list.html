@@ -9,7 +9,6 @@
 <table class="table" style="vertical-align: middle; text-align: left">
     <thead>
     <tr>
-        <th scope="col">№</th>
         <th scope="col">Дата отправки</th>
         <th scope="col">Дата завершения отправки</th>
         <th scope="col">Статус</th>
@@ -20,7 +19,6 @@
     {% for mailing in object_list %}
     <tbody>
     <tr>
-        <td>{{ mailing.id }}</td>
         {% if mailing.created_at %}
         <td>{{ mailing.created_at }}</td>
         {% else %}

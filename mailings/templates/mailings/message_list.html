@@ -9,7 +9,6 @@
 <table class="table" style="vertical-align: middle">
     <thead>
     <tr>
-        <th scope="col">№</th>
         <th scope="col">Тема сообщения</th>
         <th scope="col">Содержимое сообщения</th>
         <th scope="col">Действия</th>
@@ -18,7 +17,6 @@
     {% for message in object_list %}
     <tbody>
     <tr>
-        <td>{{ message.id }}</td>
         <td>{{ message.subject|truncatechars:30 }}</td>
         <td>{{ message.body|truncatechars:50 }}</td>
         <td><a href="{% url 'mailings:message_detail' message.id %}">Подробнее</a> |

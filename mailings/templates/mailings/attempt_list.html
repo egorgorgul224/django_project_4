@@ -8,7 +8,6 @@
 <table class="table" style="vertical-align: middle">
     <thead>
     <tr>
-        <th scope="col">№</th>
         <th scope="col">Дата отправки</th>
         <th scope="col">Статус</th>
         <th scope="col">Сообщение сервера</th>
@@ -19,7 +18,6 @@
     {% for attempt in object_list %}
     <tbody>
     <tr>
-        <td>{{ attempt.id }}</td>
         {% if attempt.created_at %}
         <td>{{ attempt.created_at }}</td>
         {% else %}
