@@ -1,5 +1,6 @@
 import os
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -46,7 +47,7 @@ class MainTemplateView(TemplateView):
         return context
 
 
-class RecipientListView(ListView):
+class RecipientListView(LoginRequiredMixin, ListView):
     """Контроллер для отображения страницы с получателями."""
 
     paginate_by = 15
@@ -60,6 +61,12 @@ class RecipientCreateView(CreateView):
     model = Recipient
     form_class = RecipientForm
     success_url = reverse_lazy("mailings:recipient_list")
+
+    def form_valid(self, form):
+        recipient = form.save(commit=False)
+        recipient.owner = self.request.user
+        recipient.save()
+        return super().form_valid(form)
 
 
 class RecipientDetailView(DetailView):
@@ -86,7 +93,7 @@ class RecipientUpdateView(UpdateView):
         return reverse("mailings:recipient_detail", args=[self.kwargs.get("pk")])
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
     """Контроллер для отображения страницы с сообщениями."""
 
     paginate_by = 15
@@ -100,6 +107,12 @@ class MessageCreateView(CreateView):
     model = Message
     form_class = MessageForm
     success_url = reverse_lazy("mailings:message_list")
+
+    def form_valid(self, form):
+        message = form.save(commit=False)
+        message.owner = self.request.user
+        message.save()
+        return super().form_valid(form)
 
 
 class MessageDetailView(DetailView):
@@ -126,7 +139,7 @@ class MessageUpdateView(UpdateView):
         return reverse("mailings:message_detail", args=[self.kwargs.get("pk")])
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     """Контроллер для отображения страницы с рассылками."""
 
     paginate_by = 15
@@ -140,6 +153,12 @@ class MailingCreateView(CreateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy("mailings:mailing_list")
+
+    def form_valid(self, form):
+        mailing = form.save(commit=False)
+        mailing.owner = self.request.user
+        mailing.save()
+        return super().form_valid(form)
 
 
 class MailingDetailView(DetailView):
@@ -174,7 +193,7 @@ class MailingUpdateView(UpdateView):
         return reverse("mailings:mailing_detail", args=[self.kwargs.get("pk")])
 
 
-class AttemptListView(ListView):
+class AttemptListView(LoginRequiredMixin, ListView):
     """Контроллер для отображения страницы с попытками рассылки."""
 
     paginate_by = 15
@@ -206,6 +225,7 @@ class StartMailingView(View):
                     server_response=f"Ошибка отправки сообщения: {str(e)}",
                     mailing_id=self.kwargs["pk"],
                     recipient_id=recipient.pk,
+                    owner=self.request.user,
                 )
             else:
                 Attempt.objects.create(
@@ -213,6 +233,7 @@ class StartMailingView(View):
                     server_response="Успешно отправлено сообщение",
                     mailing_id=self.kwargs["pk"],
                     recipient_id=recipient.pk,
+                    owner=self.request.user,
                 )
         mailing.finished_at = timezone.now()
         mailing.save()
