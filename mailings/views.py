@@ -66,7 +66,11 @@ class RecipientListView(LoginRequiredMixin, ListView):
     template_name = "recipient_list.html"
 
     def get_queryset(self):
-        return Recipient.objects.filter(owner=self.request.user.id)
+        user = self.request.user
+        if user.groups.filter(name="Manager").exists() or user.is_superuser:
+            return Recipient.objects.all()
+        else:
+            return Recipient.objects.filter(owner=self.request.user.id)
 
 
 class RecipientCreateView(CreateView):
@@ -115,7 +119,11 @@ class MessageListView(LoginRequiredMixin, ListView):
     template_name = "message_list.html"
 
     def get_queryset(self):
-        return Message.objects.filter(owner=self.request.user.id)
+        user = self.request.user
+        if user.groups.filter(name="Manager").exists() or user.is_superuser:
+            return Message.objects.all()
+        else:
+            return Message.objects.filter(owner=self.request.user.id)
 
 
 class MessageCreateView(CreateView):
@@ -164,6 +172,9 @@ class MailingListView(LoginRequiredMixin, ListView):
     template_name = "mailing_list.html"
 
     def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Manager").exists() or user.is_superuser:
+            return Mailing.objects.all()
         return Mailing.objects.filter(owner=self.request.user.id)
 
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
-from .views import RegisterView, email_verification
+from .views import BlockUserView, RegisterView, UnlockUserView, UserListView, email_verification
 
 app_name = "users"
 
@@ -10,4 +10,7 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(next_page="mailings:main"), name="logout"),
     path("register/", RegisterView.as_view(), name="register"),
     path("email-confirm/<str:token>/", email_verification, name="email-confirm"),
+    path("user/", UserListView.as_view(), name="user_list"),
+    path("user/<int:pk>/block/", BlockUserView.as_view(), name="user_block"),
+    path("user/<int:pk>/unblock/", UnlockUserView.as_view(), name="user_unlock"),
 ]

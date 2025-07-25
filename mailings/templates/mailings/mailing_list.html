@@ -1,11 +1,14 @@
 {% extends 'mailings/base.html' %}
+{% load auth_extras %}
 
 {% block title %}Рассылки{% endblock %}
 
 {% block content %}
 
 <h1 class="display-5 text-center mb-4">Рассылки</h1>
+{% if request.user|has_group:"User" or user.is_superuser %}
 <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:mailing_create' %}">Создать рассылку</a>
+{% endif %}
 <table class="table" style="vertical-align: middle; text-align: left">
     <thead>
     <tr>
@@ -41,6 +44,7 @@
         <td>{{ mailing.message|truncatechars:20 }}</td>
         <td>
             <form method="post" action="{% url 'mailings:mailing_start' mailing.id %}">
+                {% if request.user|has_group:"User" or user.is_superuser %}
                 {% csrf_token %}
                 {% if mailing.status == 'created' or mailing.status == 'published' %}
                 <button type="submit" class="btn btn-link">Отправить</button>
@@ -48,6 +52,7 @@
                 {% elif mailing.status == 'completed' %}
                 <button type="submit" class="btn btn-link" disabled>Отправить</button>
                 /
+                {% endif %}
                 {% endif %}
                 <form method="post" action="{% url 'mailings:add_archive' mailing.id %}">
                     {% csrf_token %}

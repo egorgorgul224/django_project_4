@@ -1,0 +1,50 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+
+<h1 class="display-5 text-center mb-4">Список пользователей</h1>
+<table class="table" style="vertical-align: middle">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Почта</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Действия</th>
+    </tr>
+    </thead>
+    {% for user in object_list %}
+    <tbody>
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.email }}</td>
+        <td class="{% if user.is_active == True %}text-bg-success{% elif user.is_active == False %}text-bg-warning{% endif %}" style="width: 150px">
+            {% if user.is_active == True %}
+            Активен
+            {% elif user.is_active == False %}
+            Заблокирован
+            {% endif %}
+        </td>
+        <td>
+            {% if user.is_active == True %}
+            <form method="post" action="{% url 'users:user_block' user.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link">Заблокировать</button>
+
+            </form>
+            {% elif user.is_active == False %}
+            <form method="post" action="{% url 'users:user_unlock' user.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link">Разблокировать</button>
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+{% include 'mailings/paginate.html' %}
+
+{% endblock %}

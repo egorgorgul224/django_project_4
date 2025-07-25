@@ -1,11 +1,14 @@
 {% extends 'mailings/base.html' %}
+{% load auth_extras %}
 
 {% block title %}Сообщения для рассылок{% endblock %}
 
 {% block content %}
 
 <h1 class="display-5 text-center mb-4">Сообщения для рассылок</h1>
+{% if request.user|has_group:"User" or user.is_superuser %}
 <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:message_create' %}">Создать сообщение</a>
+{% endif %}
 <table class="table" style="vertical-align: middle">
     <thead>
     <tr>
@@ -19,9 +22,14 @@
     <tr>
         <td>{{ message.subject|truncatechars:30 }}</td>
         <td>{{ message.body|truncatechars:50 }}</td>
-        <td><a href="{% url 'mailings:message_detail' message.id %}">Подробнее</a> |
+        <td>
+            <a href="{% url 'mailings:message_detail' message.id %}">Подробнее</a>
+            {% if request.user|has_group:"User" or user.is_superuser %}
+            |
             <a href="{% url 'mailings:message_update' message.id %}">Редактировать</a> |
-            <a href="{% url 'mailings:message_delete' message.id %}">Удалить</a></td>
+            <a href="{% url 'mailings:message_delete' message.id %}">Удалить</a>
+            {% endif %}
+        </td>
     </tr>
     </tbody>
     {% endfor %}

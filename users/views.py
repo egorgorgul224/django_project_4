@@ -1,10 +1,13 @@
 import os
 import secrets
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic import CreateView, ListView, View
 
 from .forms import CustomUserCreationForm
 from .models import User
@@ -40,9 +43,54 @@ class RegisterView(CreateView):
 
 def email_verification(request, token):
     """Функция верификации пользователя после подтверждения почты. После подтверждения почты поле is.active становится
-    True."""
+    True и присваивается группа прав 'Пользователь'."""
 
     user = get_object_or_404(User, token=token)
     user.is_active = True
+    group = Group.objects.get(name="User")
+    user.groups.add(group)
     user.save()
     return redirect(reverse("users:login"))
+
+
+class UserListView(LoginRequiredMixin, ListView):
+    """Контроллер для отображения страницы со всеми пользователями сервиса."""
+
+    paginate_by = 15
+    model = User
+    template_name = "user_list.html"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if not user.is_superuser:
+            user_group = User.objects.filter(groups__name="User")
+            return user_group
+        else:
+            return User.objects.filter(Q(groups__name="User") | Q(groups__name="Manager"))
+
+
+class BlockUserView(LoginRequiredMixin, View):
+    """Контроллер для блокировки пользователя на сервере. Доступно для пользователей с правами доступа 'Менеджер' и
+    'Админ'."""
+
+    def post(self, request, pk: int, *args, **kwargs):
+        user = get_object_or_404(User, pk=pk)
+
+        user.is_active = False
+        user.save()
+
+        return redirect("users:user_list")
+
+
+class UnlockUserView(LoginRequiredMixin, View):
+    """Контроллер для разблокировки пользователя на сервере. Доступно для пользователей с правами доступа 'Менеджер' и
+    'Админ'."""
+
+    def post(self, request, pk: int, *args, **kwargs):
+        user = get_object_or_404(User, pk=pk)
+
+        user.is_active = True
+        user.save()
+
+        return redirect("users:user_list")

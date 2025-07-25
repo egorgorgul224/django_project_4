@@ -21,6 +21,9 @@
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:mailing_list' %}">Рассылки</a>
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:attempt_list' %}">Отчет по
                             рассылкам</a>
+                        {% if perms.users.can_block_user or user.is_superuser %}
+                        <a class="p-2 btn btn-outline-primary" href="{% url 'users:user_list' %}">Пользователи</a>
+                        {% endif %}
                     </li>
                 </ul>
                 {% if user.is_authenticated %}

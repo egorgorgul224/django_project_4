@@ -1,11 +1,14 @@
 {% extends 'mailings/base.html' %}
+{% load auth_extras %}
 
 {% block title %}Получатели рассылок{% endblock %}
 
 {% block content %}
 
 <h1 class="display-5 text-center mb-4">Получатели рассылок</h1>
+{% if request.user|has_group:"User" or user.is_superuser %}
 <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:recipient_create' %}">Добавить получателя</a>
+{% endif %}
 <table class="table" style="vertical-align: middle">
     <thead>
     <tr>
@@ -21,9 +24,14 @@
         <td>{{ recipient.email|truncatechars:30 }}</td>
         <td>{{ recipient.full_name|truncatechars:30 }}</td>
         <td>{{ recipient.comment|truncatechars:50}}</td>
-        <td><a href="{% url 'mailings:recipient_detail' recipient.id %}">Подробнее</a> |
+        <td>
+            <a href="{% url 'mailings:recipient_detail' recipient.id %}">Подробнее</a>
+            {% if request.user|has_group:"User" or user.is_superuser %}
+            |
             <a href="{% url 'mailings:recipient_update' recipient.id %}">Редактировать</a> |
-            <a href="{% url 'mailings:recipient_delete' recipient.id %}">Удалить</a></td>
+            <a href="{% url 'mailings:recipient_delete' recipient.id %}">Удалить</a>
+            {% endif %}
+        </td>
     </tr>
     </tbody>
     {% endfor %}
