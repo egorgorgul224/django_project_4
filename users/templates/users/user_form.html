@@ -1,0 +1,23 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Пользователь{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Форма пользователя</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+            {% if object %}
+            Сохранить
+            {% else %}
+            Создать
+            {% endif %}
+        </button>
+        <a href="{% url 'users:user_detail' user.id %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+
+{% endblock %}

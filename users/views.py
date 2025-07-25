@@ -7,9 +7,9 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, ListView, View
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, UserForm
 from .models import User
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
@@ -53,7 +53,24 @@ def email_verification(request, token):
     return redirect(reverse("users:login"))
 
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserDetailView(DetailView):
+    """Контроллер для просмотра информации пользователя."""
+
+    model = User
+
+
+class UserUpdateView(UpdateView):
+    """Контроллер для обновления информации о пользователи."""
+
+    model = User
+    form_class = UserForm
+    success_url = reverse_lazy("mailings:main")
+
+    def get_success_url(self):
+        return reverse("users:user_detail", args=[self.kwargs.get("pk")])
+
+
+class UsersListView(LoginRequiredMixin, ListView):
     """Контроллер для отображения страницы со всеми пользователями сервиса."""
 
     paginate_by = 15

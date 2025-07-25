@@ -9,15 +9,9 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True, verbose_name="Email")
 
-    avatar = models.ImageField(
-        upload_to="avatars/", verbose_name="Аватар", blank=True, null=True, help_text="Загрузите свой аватар"
-    )
-    phone = models.CharField(
-        max_length=35, verbose_name="Телефон", blank=True, null=True, help_text="Введите свой номер телефон"
-    )
-    country = models.CharField(
-        max_length=50, verbose_name="Страна", blank=True, null=True, help_text="Введите свою страну"
-    )
+    avatar = models.ImageField(upload_to="avatars/", verbose_name="Аватар", blank=True, null=True)
+    phone = models.CharField(max_length=35, verbose_name="Телефон", blank=True, null=True)
+    country = models.CharField(max_length=50, verbose_name="Страна", blank=True, null=True)
     token = models.CharField(max_length=100, verbose_name="Token", blank=True, null=True)
 
     USERNAME_FIELD = "email"
