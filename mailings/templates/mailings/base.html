@@ -17,11 +17,15 @@
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:main' %}">Главная</a>
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:recipient_list' %}">Получатели
                             рассылок</a>
+                        {% if perms.mailings.view_message or user.is_superuser or not user.is_authenticated %}
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:message_list' %}">Сообщения</a>
+                        {% endif %}
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:mailing_list' %}">Рассылки</a>
+                        {% if perms.mailings.view_message or user.is_superuser or not user.is_authenticated %}
                         <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:attempt_list' %}">Отчет по
                             рассылкам</a>
-                        {% if perms.users.can_block_user or user.is_superuser %}
+                        {% endif %}
+                        {% if perms.users.can_block_user or user.is_superuser%}
                         <a class="p-2 btn btn-outline-primary" href="{% url 'users:user_list' %}">Пользователи</a>
                         {% endif %}
                     </li>

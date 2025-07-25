@@ -24,35 +24,50 @@ class MainTemplateView(TemplateView):
         статистики на главной странице."""
 
         context = super().get_context_data(**kwargs)
-        user_email = self.request.user
-        mailing_info = len(Mailing.objects.filter(owner=self.request.user.id))
-        recipient_unique = len(Recipient.objects.filter(owner=self.request.user.id))
-        message_info = len(Message.objects.filter(owner=self.request.user.id))
-        mailing_active = len(Mailing.objects.filter(status=Mailing.Published).filter(owner=self.request.user.id))
-        recipient_in_mailing = len(
-            set(Attempt.objects.filter(owner=self.request.user.id).values_list("recipient", flat=True))
-        )
-        message_success = len(
-            Attempt.objects.filter(status=Attempt.Successfully)
-            .filter(owner=self.request.user.id)
-            .values_list("mailing", flat=True)
-        )
-        attempt_sent = len(Attempt.objects.filter(owner=self.request.user.id))
-        attempt_success = len(Attempt.objects.filter(status=Attempt.Successfully).filter(owner=self.request.user.id))
-        attempt_unsuccess = len(
-            Attempt.objects.filter(status=Attempt.Unsuccessfully).filter(owner=self.request.user.id)
-        )
+        user = self.request.user
+        if user.groups.filter(name="Manager").exists() or user.is_superuser:
+            recipient_unique = len(Recipient.objects.all())
+            recipient_in_mailing = len(set(Attempt.objects.all().values_list("recipient", flat=True)))
+            message_created = len(Message.objects.all())
+            message_success = len(
+                Attempt.objects.filter(status=Attempt.Successfully).all().values_list("mailing", flat=True)
+            )
+            mailing_created = len(Mailing.objects.all())
+            mailing_active = len(Mailing.objects.filter(status=Mailing.Published).all())
+            attempt_sent = len(Attempt.objects.all())
+            attempt_success = len(Attempt.objects.filter(status=Attempt.Successfully).all())
+            attempt_unsuccess = len(Attempt.objects.filter(status=Attempt.Unsuccessfully).all())
+        else:
+            recipient_unique = len(Recipient.objects.filter(owner=self.request.user.id))
+            recipient_in_mailing = len(
+                set(Attempt.objects.filter(owner=self.request.user.id).values_list("recipient", flat=True))
+            )
+            message_created = len(Message.objects.filter(owner=self.request.user.id))
+            message_success = len(
+                Attempt.objects.filter(status=Attempt.Successfully)
+                .filter(owner=self.request.user.id)
+                .values_list("mailing", flat=True)
+            )
+            mailing_created = len(Mailing.objects.filter(owner=self.request.user.id))
+            mailing_active = len(Mailing.objects.filter(status=Mailing.Published).filter(owner=self.request.user.id))
+            attempt_sent = len(Attempt.objects.filter(owner=self.request.user.id))
+            attempt_success = len(
+                Attempt.objects.filter(status=Attempt.Successfully).filter(owner=self.request.user.id)
+            )
+            attempt_unsuccess = len(
+                Attempt.objects.filter(status=Attempt.Unsuccessfully).filter(owner=self.request.user.id)
+            )
         context = {
-            "mailing_info": mailing_info,
+            "mailing_created": mailing_created,
             "recipient_unique": recipient_unique,
-            "message_info": message_info,
+            "message_created": message_created,
             "mailing_active": mailing_active,
             "recipient_in_mailing": recipient_in_mailing,
             "attempt_sent": attempt_sent,
             "attempt_success": attempt_success,
             "attempt_unsuccess": attempt_unsuccess,
             "message_success": message_success,
-            "user_email": user_email,
+            "user_email": user,
         }
 
         return context

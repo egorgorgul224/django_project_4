@@ -10,9 +10,7 @@
 <p>Тема сообщения: {{ object.subject}}</p>
 <p>Содержимое сообщения: {{ object.body }}</p>
 <a class="p-2 btn btn-outline-dark" href="{% url 'mailings:message_list' %}">К полному списку</a>
-{% if request.user|has_group:"User" or user.is_superuser %}
 <a class="p-2 btn btn-outline-dark" href="{% url 'mailings:message_update' message.id %}">Редактировать</a>
 <a class="p-2 btn btn-outline-dark" href="{% url 'mailings:message_delete' message.id %}">Удалить</a>
-{% endif %}
 
 {% endblock %}

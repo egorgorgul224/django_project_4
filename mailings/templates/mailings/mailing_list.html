@@ -16,7 +16,9 @@
         <th scope="col">Дата завершения отправки</th>
         <th scope="col">Статус</th>
         <th scope="col">Сообщение</th>
-        <th scope="col">Действия</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
     </tr>
     </thead>
     {% for mailing in object_list %}
@@ -48,25 +50,26 @@
                 {% csrf_token %}
                 {% if mailing.status == 'created' or mailing.status == 'published' %}
                 <button type="submit" class="btn btn-link">Отправить</button>
-                /
                 {% elif mailing.status == 'completed' %}
                 <button type="submit" class="btn btn-link" disabled>Отправить</button>
-                /
                 {% endif %}
                 {% endif %}
-                <form method="post" action="{% url 'mailings:add_archive' mailing.id %}">
-                    {% csrf_token %}
-                    {% if mailing.status == 'created' or mailing.status == 'published' %}
-                    <button type="submit" class="btn btn-link">В архив</button>
-                    /
-                    {% elif mailing.status == 'completed' %}
-                    <button type="submit" class="btn btn-link" disabled>В архив</button>
-                    /
-                    {% endif %}
-                    <a href="{% url 'mailings:mailing_detail' mailing.id %}"
-                       style="vertical-align: middle">Подробнее</a>
-                </form>
             </form>
+        </td>
+        <td>
+            <form method="post" action="{% url 'mailings:add_archive' mailing.id %}">
+                {% csrf_token %}
+                {% if mailing.status == 'created' or mailing.status == 'published' %}
+                <button type="submit" class="btn btn-link">В архив</button>
+                {% elif mailing.status == 'completed' %}
+                <button type="submit" class="btn btn-link" disabled>В архив</button>
+                {% endif %}
+            </form>
+        </td>
+        <td>
+            <a href="{% url 'mailings:mailing_detail' mailing.id %}"
+               style="vertical-align: middle">Подробнее
+            </a>
         </td>
     </tr>
     </tbody>

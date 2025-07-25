@@ -6,15 +6,15 @@
 {% block content %}
 
 <h1 class="display-5 text-center mb-4">Сообщения для рассылок</h1>
-{% if request.user|has_group:"User" or user.is_superuser %}
 <a class="p-2 btn btn-outline-primary" href="{% url 'mailings:message_create' %}">Создать сообщение</a>
-{% endif %}
 <table class="table" style="vertical-align: middle">
     <thead>
     <tr>
         <th scope="col">Тема сообщения</th>
         <th scope="col">Содержимое сообщения</th>
-        <th scope="col">Действия</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
     </tr>
     </thead>
     {% for message in object_list %}
@@ -24,11 +24,12 @@
         <td>{{ message.body|truncatechars:50 }}</td>
         <td>
             <a href="{% url 'mailings:message_detail' message.id %}">Подробнее</a>
-            {% if request.user|has_group:"User" or user.is_superuser %}
-            |
-            <a href="{% url 'mailings:message_update' message.id %}">Редактировать</a> |
-            <a href="{% url 'mailings:message_delete' message.id %}">Удалить</a>
-            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'mailings:message_update' message.id %}">Редактировать</a>
+        </td>
+        <td>
+            <a href="{% url 'mailings:message_delete' message.id %}">Удалить</a></a>
         </td>
     </tr>
     </tbody>
