@@ -1,0 +1,52 @@
+[
+{
+    "model": "mailings.recipient",
+    "pk": 1,
+    "fields": {
+        "email": "user1@mail.ru",
+        "full_name": "Иванов Иван Иванович",
+        "comment": "Comment update",
+        "owner": 1
+    }
+},
+{
+    "model": "mailings.recipient",
+    "pk": 2,
+    "fields": {
+        "email": "user2@mail.ru",
+        "full_name": "Петров Петр Петрович",
+        "comment": "123",
+        "owner": 1
+    }
+},
+{
+    "model": "mailings.recipient",
+    "pk": 3,
+    "fields": {
+        "email": "egor.sport.610@mail.ru",
+        "full_name": "Егоров Егор Егорович",
+        "comment": "",
+        "owner": 1
+    }
+},
+{
+    "model": "mailings.recipient",
+    "pk": 4,
+    "fields": {
+        "email": "galina1995ru@gmail.com",
+        "full_name": "Galina",
+        "comment": "Тест",
+        "owner": 1
+    }
+},
+{
+    "model": "mailings.recipient",
+    "pk": 5,
+    "fields": {
+        "email": "gorgul.egor@yandex.ru",
+        "full_name": "Егоров Егор Егорович",
+        "comment": "проверка поле owner",
+        "owner": 2
+    }
+}
+]
