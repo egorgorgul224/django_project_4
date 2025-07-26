@@ -27,36 +27,34 @@ class MainTemplateView(TemplateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         if user.groups.filter(name="Manager").exists() or user.is_superuser:
-            recipient_unique = len(Recipient.objects.all())
-            recipient_in_mailing = len(set(Attempt.objects.all().values_list("recipient", flat=True)))
-            message_created = len(Message.objects.all())
-            message_success = len(
+            recipient_unique = Recipient.objects.all()
+            recipient_in_mailing = set(Attempt.objects.all().values_list("recipient", flat=True))
+            message_created = Message.objects.all()
+            message_success = (
                 Attempt.objects.filter(status=Attempt.Successfully).all().values_list("mailing", flat=True)
             )
-            mailing_created = len(Mailing.objects.all())
-            mailing_active = len(Mailing.objects.filter(status=Mailing.Published).all())
-            attempt_sent = len(Attempt.objects.all())
-            attempt_success = len(Attempt.objects.filter(status=Attempt.Successfully).all())
-            attempt_unsuccess = len(Attempt.objects.filter(status=Attempt.Unsuccessfully).all())
+            mailing_created = Mailing.objects.all()
+            mailing_active = Mailing.objects.filter(status=Mailing.Published).all()
+            attempt_sent = Attempt.objects.all()
+            attempt_success = Attempt.objects.filter(status=Attempt.Successfully).all()
+            attempt_unsuccess = Attempt.objects.filter(status=Attempt.Unsuccessfully).all()
         else:
-            recipient_unique = len(Recipient.objects.filter(owner=self.request.user.id))
-            recipient_in_mailing = len(
-                set(Attempt.objects.filter(owner=self.request.user.id).values_list("recipient", flat=True))
+            recipient_unique = Recipient.objects.filter(owner=self.request.user.id)
+            recipient_in_mailing = set(
+                Attempt.objects.filter(owner=self.request.user.id).values_list("recipient", flat=True)
             )
-            message_created = len(Message.objects.filter(owner=self.request.user.id))
-            message_success = len(
+            message_created = Message.objects.filter(owner=self.request.user.id)
+            message_success = (
                 Attempt.objects.filter(status=Attempt.Successfully)
                 .filter(owner=self.request.user.id)
                 .values_list("mailing", flat=True)
             )
-            mailing_created = len(Mailing.objects.filter(owner=self.request.user.id))
-            mailing_active = len(Mailing.objects.filter(status=Mailing.Published).filter(owner=self.request.user.id))
-            attempt_sent = len(Attempt.objects.filter(owner=self.request.user.id))
-            attempt_success = len(
-                Attempt.objects.filter(status=Attempt.Successfully).filter(owner=self.request.user.id)
-            )
-            attempt_unsuccess = len(
-                Attempt.objects.filter(status=Attempt.Unsuccessfully).filter(owner=self.request.user.id)
+            mailing_created = Mailing.objects.filter(owner=self.request.user.id)
+            mailing_active = Mailing.objects.filter(status=Mailing.Published).filter(owner=self.request.user.id)
+            attempt_sent = Attempt.objects.filter(owner=self.request.user.id)
+            attempt_success = Attempt.objects.filter(status=Attempt.Successfully).filter(owner=self.request.user.id)
+            attempt_unsuccess = Attempt.objects.filter(status=Attempt.Unsuccessfully).filter(
+                owner=self.request.user.id
             )
         context = {
             "mailing_created": mailing_created,
@@ -82,6 +80,8 @@ class RecipientListView(LoginRequiredMixin, ListView):
     template_name = "recipient_list.html"
 
     def get_queryset(self):
+        """Функция для получения списка получателей рассылки."""
+
         user = self.request.user
         if user.groups.filter(name="Manager").exists() or user.is_superuser:
             return Recipient.objects.all()
@@ -97,6 +97,8 @@ class RecipientCreateView(CreateView):
     success_url = reverse_lazy("mailings:recipient_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -122,6 +124,8 @@ class RecipientDeleteView(DeleteView):
     success_url = reverse_lazy("mailings:recipient_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -136,6 +140,8 @@ class RecipientUpdateView(UpdateView):
     success_url = reverse_lazy("mailings:recipient_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -153,12 +159,16 @@ class MessageListView(LoginRequiredMixin, ListView):
     template_name = "message_list.html"
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser or not user.is_authenticated):
             return HttpResponseForbidden("У вас нет прав.")
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+        """Функция для получения списка сообщений."""
+
         user = self.request.user
         if user.groups.filter(name="Manager").exists() or user.is_superuser:
             return Message.objects.all()
@@ -174,6 +184,8 @@ class MessageCreateView(CreateView):
     success_url = reverse_lazy("mailings:message_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -192,6 +204,8 @@ class MessageDetailView(DetailView):
     model = Message
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -205,6 +219,8 @@ class MessageDeleteView(DeleteView):
     success_url = reverse_lazy("mailings:message_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -219,6 +235,8 @@ class MessageUpdateView(UpdateView):
     success_url = reverse_lazy("mailings:message_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -236,6 +254,8 @@ class MailingListView(LoginRequiredMixin, ListView):
     template_name = "mailing_list.html"
 
     def get_queryset(self):
+        """Функция для получения списка рассылок."""
+
         user = self.request.user
         if user.groups.filter(name="Manager").exists() or user.is_superuser:
             return Mailing.objects.all()
@@ -250,6 +270,8 @@ class MailingCreateView(CreateView):
     success_url = reverse_lazy("mailings:mailing_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -268,7 +290,8 @@ class MailingDetailView(DetailView):
     model = Mailing
 
     def get_context_data(self, **kwargs):
-        """Функция для получения всех получателей рассылки."""
+        """Функция для получения почт всех получателей рассылки."""
+
         context = super().get_context_data(**kwargs)
         mailing_emails = get_object_or_404(Mailing, pk=self.kwargs["pk"])
         recipients = mailing_emails.recipient.values_list("email", flat=True)
@@ -283,6 +306,8 @@ class MailingDeleteView(DeleteView):
     success_url = reverse_lazy("mailings:mailing_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -297,6 +322,8 @@ class MailingUpdateView(UpdateView):
     success_url = reverse_lazy("mailings:mailing_list")
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав.")
@@ -314,6 +341,8 @@ class AttemptListView(LoginRequiredMixin, ListView):
     template_name = "attempt_list.html"
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="User").exists() or user.is_superuser or not user.is_authenticated):
             return HttpResponseForbidden("У вас нет прав.")
@@ -328,6 +357,8 @@ class StartMailingView(View):
     модели Attempt с результатами рассылки."""
 
     def post(self, *args, **kwargs):
+        """Функция для отправки рассылки пользователям."""
+
         mailing = get_object_or_404(Mailing, pk=self.kwargs["pk"])
         recipients = mailing.recipient.all()
         mailing.created_at = timezone.now()
@@ -367,6 +398,8 @@ class AddArchiveView(View):
     """Функция для добавления рассылки в архив. Статус меняется на 'Завершено'."""
 
     def post(self, *args, **kwargs):
+        """Функция для отправки рассылки в архив."""
+
         mailing = get_object_or_404(Mailing, pk=self.kwargs["pk"])
         mailing.status = "completed"
         mailing.save()

@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = "Add groups to the database"
+    help = "Команда для добавления групп в базу данных."
 
     def handle(self, *args, **kwargs):
         Group.objects.all().delete()

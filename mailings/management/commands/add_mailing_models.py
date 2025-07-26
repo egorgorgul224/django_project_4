@@ -5,7 +5,7 @@ from mailings.models import Attempt, Mailing, Message, Recipient
 
 
 class Command(BaseCommand):
-    help = "Add test recipients, messages, mailings and attempts to the database"
+    help = "Команда для добавления данных получаетелей, сообщений, рассылок и попыток рассылок в базу данных."
 
     def handle(self, *args, **kwargs):
         Recipient.objects.all().delete()

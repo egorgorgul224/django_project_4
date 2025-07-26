@@ -79,12 +79,16 @@ class UsersListView(LoginRequiredMixin, ListView):
     template_name = "user_list.html"
 
     def dispatch(self, request, *args, **kwargs):
+        """Функция для проверки прав доступа к странице."""
+
         user = self.request.user
         if not (user.groups.filter(name="Manager").exists() or user.is_superuser):
             return HttpResponseForbidden("У вас нет прав для посещения данной страницы")
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+        """Функция для получения всех пользователей сервиса."""
+
         user = self.request.user
 
         if not user.is_superuser:
@@ -99,6 +103,8 @@ class BlockUserView(LoginRequiredMixin, View):
     'Админ'."""
 
     def post(self, request, pk: int, *args, **kwargs):
+        """Функция для блокировки пользователя. Поле 'is_active' принимает значение False."""
+
         user = get_object_or_404(User, pk=pk)
 
         if not (user.groups.filter(name="Manager").exists() or user.is_superuser):
@@ -115,6 +121,8 @@ class UnlockUserView(LoginRequiredMixin, View):
     'Админ'."""
 
     def post(self, request, pk: int, *args, **kwargs):
+        """Функция для разблокировки пользователя. Поле 'is_active' принимает значение True."""
+
         user = get_object_or_404(User, pk=pk)
 
         if not (user.groups.filter(name="Manager").exists() or user.is_superuser):

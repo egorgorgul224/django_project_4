@@ -5,7 +5,7 @@ from users.models import User
 
 
 class Command(BaseCommand):
-    help = "Add test users to the database"
+    help = "Команда для добавления пользователей в базу данных."
 
     def handle(self, *args, **kwargs):
         User.objects.all().delete()

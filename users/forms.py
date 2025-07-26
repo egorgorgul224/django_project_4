@@ -6,6 +6,8 @@ from .models import User
 
 
 class CustomUserCreationForm(UserCreationForm):
+    """Форма для регистрации пользователя. Доступные поля: email, password1, password2."""
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ("email", "password1", "password2")
@@ -21,14 +23,10 @@ class CustomUserCreationForm(UserCreationForm):
             {"class": "form-control", "placeholder": "Введите пароль еще раз"}
         )
 
-    def clean_phone(self):
-        phone = self.cleaned_data.get("phone")
-        if phone and not phone.isdigit():
-            raise forms.ValidationError("Номер телефона должен состоять из цифр.")
-        return phone
-
 
 class UserForm(forms.ModelForm):
+    """Форма для профиля пользователя. Доступные поля: first_name, last_name, avatar, phone, country."""
+
     class Meta:
         model = User
         fields = ("first_name", "last_name", "avatar", "phone", "country")
@@ -45,6 +43,8 @@ class UserForm(forms.ModelForm):
         self.fields["country"].widget.attrs.update({"class": "form-control", "placeholder": "Введите свою страну"})
 
     def clean_image(self):
+        """Функция для проверки корректной загрузки изображения."""
+
         image = self.cleaned_data.get("image")
         if not image:
             return None
@@ -55,6 +55,8 @@ class UserForm(forms.ModelForm):
         return image
 
     def clean_phone(self):
+        """Функция для проверки корректного номера телефона."""
+
         phone = self.cleaned_data.get("phone")
         if phone and not phone.isdigit():
             raise forms.ValidationError("Номер телефона должен состоять из цифр.")

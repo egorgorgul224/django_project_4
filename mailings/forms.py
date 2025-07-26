@@ -4,7 +4,7 @@ from .models import Mailing, Message, Recipient
 
 
 class RecipientForm(forms.ModelForm):
-    """Форма по модели Recipient."""
+    """Форма модели получателя рассылки."""
 
     class Meta:
         model = Recipient
@@ -21,7 +21,7 @@ class RecipientForm(forms.ModelForm):
 
 
 class MessageForm(forms.ModelForm):
-    """Форма по модели Message."""
+    """Форма модели сообщение."""
 
     class Meta:
         model = Message
@@ -36,7 +36,7 @@ class MessageForm(forms.ModelForm):
 
 
 class MailingForm(forms.ModelForm):
-    """Форма по модели Mailing."""
+    """Форма модели рассылки."""
 
     class Meta:
         model = Mailing
