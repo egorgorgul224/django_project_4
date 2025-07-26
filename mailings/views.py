@@ -154,7 +154,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         user = self.request.user
-        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+        if not (user.groups.filter(name="User").exists() or user.is_superuser or not user.is_authenticated):
             return HttpResponseForbidden("У вас нет прав.")
         return super().dispatch(request, *args, **kwargs)
 
@@ -315,7 +315,7 @@ class AttemptListView(LoginRequiredMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         user = self.request.user
-        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+        if not (user.groups.filter(name="User").exists() or user.is_superuser or not user.is_authenticated):
             return HttpResponseForbidden("У вас нет прав.")
         return super().dispatch(request, *args, **kwargs)
 
