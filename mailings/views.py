@@ -2,6 +2,7 @@ import os
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -95,6 +96,12 @@ class RecipientCreateView(CreateView):
     form_class = RecipientForm
     success_url = reverse_lazy("mailings:recipient_list")
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         recipient = form.save(commit=False)
         recipient.owner = self.request.user
@@ -114,6 +121,12 @@ class RecipientDeleteView(DeleteView):
     model = Recipient
     success_url = reverse_lazy("mailings:recipient_list")
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
+
 
 class RecipientUpdateView(UpdateView):
     """Контроллер для обновления информации о получатели."""
@@ -121,6 +134,12 @@ class RecipientUpdateView(UpdateView):
     model = Recipient
     form_class = RecipientForm
     success_url = reverse_lazy("mailings:recipient_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse("mailings:recipient_detail", args=[self.kwargs.get("pk")])
@@ -132,6 +151,12 @@ class MessageListView(LoginRequiredMixin, ListView):
     paginate_by = 15
     model = Message
     template_name = "message_list.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         user = self.request.user
@@ -148,6 +173,12 @@ class MessageCreateView(CreateView):
     form_class = MessageForm
     success_url = reverse_lazy("mailings:message_list")
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         message = form.save(commit=False)
         message.owner = self.request.user
@@ -160,12 +191,24 @@ class MessageDetailView(DetailView):
 
     model = Message
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
+
 
 class MessageDeleteView(DeleteView):
     """Контроллер для удаления сообщения."""
 
     model = Message
     success_url = reverse_lazy("mailings:message_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MessageUpdateView(UpdateView):
@@ -174,6 +217,12 @@ class MessageUpdateView(UpdateView):
     model = Message
     form_class = MessageForm
     success_url = reverse_lazy("mailings:message_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse("mailings:message_detail", args=[self.kwargs.get("pk")])
@@ -199,6 +248,12 @@ class MailingCreateView(CreateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy("mailings:mailing_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         mailing = form.save(commit=False)
@@ -227,6 +282,12 @@ class MailingDeleteView(DeleteView):
     model = Mailing
     success_url = reverse_lazy("mailings:mailing_list")
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
+
 
 class MailingUpdateView(UpdateView):
     """Контроллер для обновления данных рассылки."""
@@ -234,6 +295,12 @@ class MailingUpdateView(UpdateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy("mailings:mailing_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse("mailings:mailing_detail", args=[self.kwargs.get("pk")])
@@ -245,6 +312,12 @@ class AttemptListView(LoginRequiredMixin, ListView):
     paginate_by = 15
     model = Attempt
     template_name = "attempt_list.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="User").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return Attempt.objects.filter(owner=self.request.user.id)

@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 from django.db.models import Q
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
@@ -77,6 +78,12 @@ class UsersListView(LoginRequiredMixin, ListView):
     model = User
     template_name = "user_list.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        if not (user.groups.filter(name="Manager").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав для посещения данной страницы")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         user = self.request.user
 
@@ -94,6 +101,9 @@ class BlockUserView(LoginRequiredMixin, View):
     def post(self, request, pk: int, *args, **kwargs):
         user = get_object_or_404(User, pk=pk)
 
+        if not (user.groups.filter(name="Manager").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав для блокировки пользователей")
+
         user.is_active = False
         user.save()
 
@@ -106,6 +116,9 @@ class UnlockUserView(LoginRequiredMixin, View):
 
     def post(self, request, pk: int, *args, **kwargs):
         user = get_object_or_404(User, pk=pk)
+
+        if not (user.groups.filter(name="Manager").exists() or user.is_superuser):
+            return HttpResponseForbidden("У вас нет прав для разблокировки пользователей")
 
         user.is_active = True
         user.save()
