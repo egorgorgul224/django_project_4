@@ -277,6 +277,11 @@ class MailingCreateView(CreateView):
             return HttpResponseForbidden("У вас нет прав.")
         return super().dispatch(request, *args, **kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super(CreateView, self).get_form_kwargs()
+        kwargs["owner"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         mailing = form.save(commit=False)
         mailing.owner = self.request.user

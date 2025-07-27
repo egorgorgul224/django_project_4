@@ -48,8 +48,9 @@ class MailingForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("owner")
         super(MailingForm, self).__init__(*args, **kwargs)
-
+        self.fields["message"].queryset = Message.objects.filter(owner=user)
         self.fields["message"].widget.attrs.update({"class": "form-select"})
-
+        self.fields["recipient"].queryset = Recipient.objects.filter(owner=user)
         self.fields["recipient"].widget.attrs.update({"class": "form-select"})
