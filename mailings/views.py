@@ -133,7 +133,7 @@ class RecipientDeleteView(DeleteView):
 
 
 class RecipientUpdateView(UpdateView):
-    """Контроллер для обновления информации о получатели."""
+    """Контроллер для обновления информации о получателе."""
 
     model = Recipient
     form_class = RecipientForm
@@ -170,7 +170,7 @@ class MessageListView(LoginRequiredMixin, ListView):
         """Функция для получения списка сообщений."""
 
         user = self.request.user
-        if user.groups.filter(name="Manager").exists() or user.is_superuser:
+        if user.is_superuser:
             return Message.objects.all()
         else:
             return Message.objects.filter(owner=self.request.user.id)
