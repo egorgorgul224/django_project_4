@@ -1,0 +1,54 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+
+<h1 class="display-5 text-center mb-4">Отчет по рассылкам</h1>
+<div class="row">
+    <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Получатели рассылок</h5>
+                <p class="card-text">Количество уникальных получателей: {{ recipient_unique|length }}</p>
+                <p class="card-text">Добавлено в рассылки: {{ recipient_in_mailing|length  }}</p>
+                <a href="{% url 'mailings:recipient_list' %}" class="btn btn-primary">Посмотреть получателей</a>
+            </div>
+        </div>
+    </div>
+    {% if perms.mailings.view_message %}
+    <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Сообщения</h5>
+                <p class="card-text">Создано сообщений: {{ message_created|length  }} </p>
+                <p class="card-text">Всего отправлено сообщений: {{ message_success|length  }} </p>
+                <a href="{% url 'mailings:message_list' %}" class="btn btn-primary">Посмотреть сообщения</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Рассылки</h5>
+                <p class="card-text">Создано рассылок: {{ mailing_created|length  }} </p>
+                <p class="card-text">Активные рассылки: {{ mailing_active|length  }} </p>
+                <a href="{% url 'mailings:mailing_list' %}" class="btn btn-primary">Посмотреть рассылки</a>
+            </div>
+        </div>
+    </div>
+    {% if perms.mailings.view_message %}
+    <div class="col-sm-4 mb-3 mt-4 mb-sm-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">Результаты рассылок</h5>
+                <p class="card-text">Кол-во рассылок: {{ attempt_sent|length  }} </p>
+                <p class="card-text">Успешных: {{ attempt_success|length  }}. Неуспешных: {{ attempt_unsuccess|length  }} </p>
+                <a href="{% url 'mailings:attempt_list' %}" class="btn btn-primary">Посмотреть отчет по рассылкам</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

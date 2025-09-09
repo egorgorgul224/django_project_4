@@ -1,0 +1,38 @@
+[
+{
+    "model": "mailings.message",
+    "pk": 1,
+    "fields": {
+        "subject": "Условия сотрудничества",
+        "body": "Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review. Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review. Pair text with an image to focus on your chosen product, collection, or blog post.",
+        "owner": 1
+    }
+},
+{
+    "model": "mailings.message",
+    "pk": 2,
+    "fields": {
+        "subject": "Спортивное событие",
+        "body": "Тестовый текст про спортивное событие",
+        "owner": 1
+    }
+},
+{
+    "model": "mailings.message",
+    "pk": 3,
+    "fields": {
+        "subject": "Дополнительный тест №3",
+        "body": "Подросток Марти с помощью машины времени, сооружённой его другом-профессором доком Брауном, попадает из 80-х в далекие 50-е. Там он встречается со своими будущими родителями, ещё подростками, и другом-профессором, совсем молодым.",
+        "owner": 1
+    }
+},
+{
+    "model": "mailings.message",
+    "pk": 4,
+    "fields": {
+        "subject": "Проверка работы сервиса сообщений",
+        "body": "Добрый день! Это тестовое сообщение для проверки работоспособности сервера и поля owner.",
+        "owner": 2
+    }
+}
+]

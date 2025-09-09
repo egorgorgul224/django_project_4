@@ -1,0 +1,81 @@
+{% extends 'mailings/base.html' %}
+{% load auth_extras %}
+
+{% block title %}Рассылки{% endblock %}
+
+{% block content %}
+
+<h1 class="display-5 text-center mb-4">Рассылки</h1>
+{% if request.user|has_group:"User" or user.is_superuser %}
+<a class="p-2 btn btn-outline-primary" href="{% url 'mailings:mailing_create' %}">Создать рассылку</a>
+{% endif %}
+<table class="table" style="vertical-align: middle; text-align: left">
+    <thead>
+    <tr>
+        <th scope="col">Дата отправки</th>
+        <th scope="col">Дата завершения отправки</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Сообщение</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    {% for mailing in object_list %}
+    <tbody>
+    <tr>
+        {% if mailing.created_at %}
+        <td>{{ mailing.created_at }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        {% if mailing.finished_at %}
+        <td>{{ mailing.finished_at }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        <td class="{% if mailing.status == 'created' %}text-bg-primary{% elif mailing.status == 'published' %}text-bg-success{% elif mailing.status == 'completed' %}text-bg-secondary{% endif %}">
+            {% if mailing.status == 'created' %}
+            Создана
+            {% elif mailing.status == 'published' %}
+            Запущена
+            {% elif mailing.status == 'completed' %}
+            Завершена
+            {% endif %}
+        </td>
+        <td>{{ mailing.message|truncatechars:20 }}</td>
+        <td>
+            <form method="post" action="{% url 'mailings:mailing_start' mailing.id %}">
+                {% if request.user|has_group:"User" or user.is_superuser %}
+                {% csrf_token %}
+                {% if mailing.status == 'created' or mailing.status == 'published' %}
+                <button type="submit" class="btn btn-link">Отправить</button>
+                {% elif mailing.status == 'completed' %}
+                <button type="submit" class="btn btn-link" disabled>Отправить</button>
+                {% endif %}
+                {% endif %}
+            </form>
+        </td>
+        <td>
+            <form method="post" action="{% url 'mailings:add_archive' mailing.id %}">
+                {% csrf_token %}
+                {% if mailing.status == 'created' or mailing.status == 'published' %}
+                <button type="submit" class="btn btn-link">В архив</button>
+                {% elif mailing.status == 'completed' %}
+                <button type="submit" class="btn btn-link" disabled>В архив</button>
+                {% endif %}
+            </form>
+        </td>
+        <td>
+            <a href="{% url 'mailings:mailing_detail' mailing.id %}"
+               style="vertical-align: middle">Подробнее
+            </a>
+        </td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+{% include 'mailings/paginate.html' %}
+
+{% endblock %}

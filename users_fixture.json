@@ -1,0 +1,46 @@
+[
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$PPdPLlv83u0O07o2OAyrxL$77bhTjv3SKlHYxTNXHZimHedX827h/8kub7rr+dweuc=",
+        "last_login": "2025-07-25T12:19:02.169Z",
+        "is_superuser": true,
+        "first_name": "Admin",
+        "last_name": "Admin",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-07-23T13:08:21.858Z",
+        "email": "admin@mail.ru",
+        "avatar": "",
+        "phone": null,
+        "country": "1",
+        "token": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$Wu7tvYOAiKJ8tRRfkx4IoC$5SQd0lZf2Hvd0+NzuusN3lQMHkSBHsDFYABjwbLiB7M=",
+        "last_login": "2025-07-25T17:09:20.724Z",
+        "is_superuser": false,
+        "first_name": "Тестовое имя",
+        "last_name": "Тестовая фамилия",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-24T09:19:18Z",
+        "email": "scudf24@gmail.com",
+        "avatar": "avatars/123.png",
+        "phone": "79999999999",
+        "country": "Тестовая страна",
+        "token": "a5fdf9420becb1f792f640ce44d21845",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+}
+]

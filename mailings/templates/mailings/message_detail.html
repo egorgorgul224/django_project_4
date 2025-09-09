@@ -1,0 +1,16 @@
+{% extends 'mailings/base.html' %}
+{% load auth_extras %}
+{% load static %}
+
+{% block title %}Информация о сообщении{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Информация о сообщении</h1>
+<p>Тема сообщения: {{ object.subject}}</p>
+<p>Содержимое сообщения: {{ object.body }}</p>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:message_list' %}">К полному списку</a>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:message_update' message.id %}">Редактировать</a>
+<a class="p-2 btn btn-outline-dark" href="{% url 'mailings:message_delete' message.id %}">Удалить</a>
+
+{% endblock %}

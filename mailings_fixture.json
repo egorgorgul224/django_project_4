@@ -1,0 +1,72 @@
+[
+{
+    "model": "mailings.mailing",
+    "pk": 2,
+    "fields": {
+        "created_at": "2025-07-25T13:53:06.460Z",
+        "finished_at": "2025-07-25T13:53:06.832Z",
+        "status": "completed",
+        "message": 1,
+        "owner": 1,
+        "recipient": [
+            2
+        ]
+    }
+},
+{
+    "model": "mailings.mailing",
+    "pk": 3,
+    "fields": {
+        "created_at": "2025-07-23T08:05:34.894Z",
+        "finished_at": "2025-07-23T08:05:35.247Z",
+        "status": "completed",
+        "message": 1,
+        "owner": 1,
+        "recipient": [
+            3
+        ]
+    }
+},
+{
+    "model": "mailings.mailing",
+    "pk": 4,
+    "fields": {
+        "created_at": "2025-07-23T17:50:42.201Z",
+        "finished_at": "2025-07-23T17:50:42.655Z",
+        "status": "published",
+        "message": 2,
+        "owner": 1,
+        "recipient": [
+            3
+        ]
+    }
+},
+{
+    "model": "mailings.mailing",
+    "pk": 5,
+    "fields": {
+        "created_at": null,
+        "finished_at": null,
+        "status": "created",
+        "message": 3,
+        "owner": 1,
+        "recipient": [
+            3
+        ]
+    }
+},
+{
+    "model": "mailings.mailing",
+    "pk": 6,
+    "fields": {
+        "created_at": "2025-07-24T14:11:18.878Z",
+        "finished_at": "2025-07-24T14:11:19.235Z",
+        "status": "published",
+        "message": 4,
+        "owner": 2,
+        "recipient": [
+            5
+        ]
+    }
+}
+]
